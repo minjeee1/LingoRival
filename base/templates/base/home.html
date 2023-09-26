@@ -1,0 +1,35 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<a href="{%url 'start_matching' %}">Match START!!</a>
+
+<h1>Room Lists</h1>
+
+<a href="{%url 'create-game-room' %}">Creat Room</a>
+<hr>
+
+<div>
+    <div>
+        {% for gameroom in gamerooms %}
+            <div>
+            {% for participant in gameroom.participants.all %}
+                {% if participant == request.user %}
+                    <span><strong>@{{ participant }}</strong></span>
+                {% endif %}
+            {% endfor %}
+            {% for participant in gameroom.participants.all %}
+                {% if participant != request.user %}
+                    <span>@{{ participant }}</span>
+                {% endif %}
+            {% endfor %}
+                <h5>{{gameroom}} -- <a href="{% url 'gameroom' gameroom.id %}">Join the game</a></h5>
+                <small>{{gameroom.native_language}} -> {{gameroom.target_language}}</small>
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

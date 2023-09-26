@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.native_language.label_tag }}
+        {{ form.native_language }}
+        <br>
+        {{ form.target_language.label_tag }}
+        {{ form.target_language }}
+        <br>
+        <input type="submit" value="Create Room">
+    </form>
+</div>
+
+
+<!-- <div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="Submit" value="Submit" />
+    </form>
+</div> -->
+
+{% endblock%}

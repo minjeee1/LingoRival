@@ -1,0 +1,87 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div id="room-data" data-room-id="{{ gameroom.id }}" data-username="{{request.user.username}}">
+    
+    <div>
+        {% for participant in gameroom.participants.all %}
+            {% if participant == request.user %}
+                <span><strong>@{{ participant }}</strong></span>
+            {% endif %}
+        {% endfor %}
+        {% for participant in gameroom.participants.all %}
+            {% if participant != request.user %}
+                <span>@{{ participant }}</span>
+            {% endif %}
+        {% endfor %}
+    
+    </div>
+    <small>{{gameroom.native_language}} -> {{gameroom.target_language}}</small>
+
+
+
+    <div class="room-container">
+
+        <h1>{{gameroom}}</h1>
+        <p>문제: {{ selected_quiz.Quiz }}</p>
+        <p>답변: {{ selected_quiz.Answer }}</p>
+
+        {% if request.user.is_authenticated %}
+        <div class="comment-form">
+            <form method="POST" action="" onsubmit="return submitForm(this);">
+                {% csrf_token %}
+                <input type="text" name="body" placeholder="Write your answer here" onkeydown="return event.key != 'Enter';">
+                <button type="button" id="Submit-button" onclick="submitForm(this.form);">Submit</button>
+            </form>
+        </div>
+
+        <button type="button" id="response-button" onclick="redirectToSubmitPage()">홈으로 돌아가서 AI의 평가받기</button>
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+
+
+<!-- 템플릿 내부에서 JavaScript 함수 호출 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery를 사용하려면 jQuery 라이브러리를 로드해야 합니다. -->
+<script>
+
+    var currentRoomID = document.getElementById('room-data').getAttribute('data-room-id');
+    var currentUsername = document.getElementById('room-data').getAttribute('data-username');
+
+    // 사용자가 페이지를 떠날 때 실행되는 함수
+    window.onbeforeunload = function () {
+        return false;}
+
+    function submitForm(form) {
+        // 이 부분에서 필요한 유효성 검사 등을 수행합니다.
+        // 만약 유효성 검사를 통과하지 못하면 false를 반환하고 제출을 중단합니다.
+        // 예를 들어, 답변이 비어있는 경우 제출을 막을 수 있습니다.
+
+        // 폼을 제출합니다.
+        form.submit();
+        event.preventDefault();
+        
+        // 폼 제출 후에는 페이지 리로드를 막기 위해 false를 반환합니다.
+        return false;
+    }
+    
+    function redirectToSubmitPage() {
+        window.location.href = '/room/'+String(currentRoomID)+'/submit/';
+    }
+
+    document.getElementById('Submit-button').addEventListener('click', function () {
+        formSubmitted = true; // 제출 플래그 설정
+        window.onbeforeunload = null; // 경고 메시지 비활성화
+    });  
+
+
+</script>
+
+    
+
+{% endblock %}
