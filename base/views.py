@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 import openai
 
 # ChatGPT API 키를 설정합니다.
-openai.api_key = "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"
+openai.api_key = ""
 
 def find_and_return_alpha(input_string):
     if 'A' in input_string and 'B' in input_string:
